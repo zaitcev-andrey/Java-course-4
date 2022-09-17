@@ -1,0 +1,71 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+package grpc.base; // создадим такой пакет
+option java_multiple_files = true; // для того, чтобы каждый тип данных был в своём файле
+option java_package = "grpc.base"; // создаём такой пакет java
+option java_outer_classname = "BaseServiceProto"; // имя класса, который будет описывать сервис
+
+message TagsRequest{ // сообщение, которое клиент присылает серверу
+  string tags = 1; // нумеруем поля сообщения
+  int32 del_tag = 2;
+}
+
+message TagsResponse{ // сообщение, которое присылается сервером в ответ
+  string tags = 1;
+  int32 id_new_tag = 2;
+}
+
+message RecordsRequest{
+  string records = 1;
+}
+
+message RecordsResponse{
+  string records = 1;
+  int32 id_record = 2;
+}
+
+message FileRequest{
+  int32 id_record = 1;
+  string name_file = 2;
+  int32 num_bytes = 3;
+}
+
+message FileResponse{
+  string file = 1;
+  int32 num_bytes = 2;
+}
+
+message TagsAndRecordsRequest{
+  string records = 1;
+  string tags = 2;
+}
+
+message TagsAndRecordsResponse{
+  string recordsWithTags = 1;
+}
+
+message FindRecordsRequest{
+  int32 id_tag = 1;
+}
+
+message FindRecordsResponse{
+  string records = 1;
+}
+
+service  Base{ // описываем сам сервис
+  // внутри сервиса определяем все методы, которые можно вызывать удалённо
+  // 1 - сообщение, которое метод принимает, 2-то, что возвращается
+  rpc getTags(TagsRequest) returns (TagsResponse) {};
+  rpc addTag(TagsRequest) returns (TagsResponse) {};
+  rpc delTag(TagsRequest) returns (TagsResponse) {};
+
+  rpc getRecords(RecordsRequest) returns (RecordsResponse) {};
+  rpc addRecord(RecordsRequest) returns (RecordsResponse) {};
+
+  rpc addFile(FileRequest) returns (FileResponse) {};
+  rpc getFile(FileRequest) returns (FileResponse) {};
+
+  rpc addTagsToRecord(TagsAndRecordsRequest) returns (TagsAndRecordsResponse) {};
+
+  rpc findRecords(FindRecordsRequest) returns (FindRecordsResponse) {};
+}
